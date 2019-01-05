@@ -14,8 +14,8 @@ const controller = {
         });
     },
     saveProject: function (req, res) {
-        var project = new Project();
-        var params = req.body;
+        let project = new Project();
+        let params = req.body;
 
         project.name = params.name;
         project.description = params.description;
@@ -28,6 +28,17 @@ const controller = {
             if (err) return res.status(500).send({msg:"error: cant save the document"});
             if (!projectStored) return res.status(404).send({msg:"error: cant save the project"});
             return res.status(200).send({project: projectStored});
+        });
+    },
+    getProject: function (req, res) {
+        let projectId = req.params.id;
+
+        if (projectId == null) return res.status(404).send({msg:"error: doesnt exists"});
+
+        Project.findById(projectId, (err, project) => {
+            if (err) return res.status(500).send({msg:"error: cant show the data"});
+            if (!project) return res.status(404).send({msg:"error: doesnt exists"});
+            return res.status(200).send({project});
         });
     }
 }
