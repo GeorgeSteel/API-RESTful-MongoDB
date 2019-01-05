@@ -55,8 +55,17 @@ const controller = {
         Project.findByIdAndUpdate(projectId, update, {new:true},(err, projectUpdated) => {
             if (err) return res.status(500).send({msg:"error: cant update"});
             if (!projectUpdated) return res.status(404).send({msg:"error: the project that you want update doesnt exists"});
-            return res.status(200).send({projects: projectUpdated});
+            return res.status(200).send({project: projectUpdated});
         })
+    },
+    deleteProject: function (req, res) {
+        let projectId = req.params.id;
+
+        Project.findByIdAndDelete(projectId, (err, projectDeleted) =>{
+            if (err) return res.status(500).send({msg:"error: cant delete"});
+            if (!projectDeleted) return res.status(404).send({msg:"error: the project that you want delete doesnt exists"});
+            return res.status(200).send({project: projectDeleted});
+        });
     }
 
 }
