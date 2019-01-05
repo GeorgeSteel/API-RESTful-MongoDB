@@ -47,7 +47,18 @@ const controller = {
             if (!projects) return res.status(404).send({msg:"error: doesnt exists projects to show"});
             return res.status(200).send({projects});
         });
+    },
+    updateProject: function (req, res) {
+        let projectId = req.params.id;
+        let update = req.body;
+
+        Project.findByIdAndUpdate(projectId, update, {new:true},(err, projectUpdated) => {
+            if (err) return res.status(500).send({msg:"error: cant update"});
+            if (!projectUpdated) return res.status(404).send({msg:"error: the project that you want update doesnt exists"});
+            return res.status(200).send({projects: projectUpdated});
+        })
     }
+
 }
 
 module.exports = controller;
