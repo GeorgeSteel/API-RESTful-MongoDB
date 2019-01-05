@@ -66,6 +66,23 @@ const controller = {
             if (!projectDeleted) return res.status(404).send({msg:"error: the project that you want delete doesnt exists"});
             return res.status(200).send({project: projectDeleted});
         });
+    },
+    uploadImg: function (req, res) {
+        let projectId = req.params.id;
+
+        if (req.files) {
+            let filePath = req.files.img.path;
+            let fileSplit = filePath.split('/');
+            let fileName = fileSplit[1];
+
+            Project.findByIdAndUpdate(projectId, {img: fileName}, { new:true }, (err, projectUpdated) =>{
+                if (err) return res.status(500).send({msg:"error: cant upload the img"});
+                if (!projectUpdated) return res.status(404).send({msg:"error: the img that you want upload doesnt exists"});            
+                return res.status(200).send({ project: projectUpdated });
+            });            
+        } else {
+            return res.status(200).send({msg: 'img dont uploaded...'});
+        }
     }
 
 }
