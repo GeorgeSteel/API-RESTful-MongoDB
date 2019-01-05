@@ -1,6 +1,7 @@
 'use strict';
 
 const Project = require('../models/project');
+const fs = require('fs');
 
 const controller = {
     home: function (req, res) {
@@ -74,12 +75,22 @@ const controller = {
             let filePath = req.files.img.path;
             let fileSplit = filePath.split('/');
             let fileName = fileSplit[1];
+            let extSplit = fileName.split('\.');
+            let fileExt = extSplit[1];
 
-            Project.findByIdAndUpdate(projectId, {img: fileName}, { new:true }, (err, projectUpdated) =>{
-                if (err) return res.status(500).send({msg:"error: cant upload the img"});
-                if (!projectUpdated) return res.status(404).send({msg:"error: the img that you want upload doesnt exists"});            
-                return res.status(200).send({ project: projectUpdated });
-            });            
+            if (fileExt == 'png' || fileExt == 'jpg' || fileExt == 'jpeg' || fileExt == 'png') {
+                Project.findByIdAndUpdate(projectId, {img: fileName}, { new:true }, (err, projectUpdated) =>{
+                    if (err) return res.status(500).send({msg:"error: cant upload the img"});
+                    if (!projectUpdated) return res.status(404).send({msg:"error: the img that you want upload doesnt exists"});            
+                    return res.status(200).send({ project: projectUpdated });
+                });  
+            }else {
+                fs.unlink(filePath, err => {
+                    return res.status(200).send({ msg: 'Invalid extention file' });
+                });
+            }
+
+                      
         } else {
             return res.status(200).send({msg: 'img dont uploaded...'});
         }
