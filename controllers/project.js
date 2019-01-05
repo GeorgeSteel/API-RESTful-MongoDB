@@ -40,6 +40,13 @@ const controller = {
             if (!project) return res.status(404).send({msg:"error: doesnt exists"});
             return res.status(200).send({project});
         });
+    },
+    getProjects: function (req, res) {
+        Project.find({}).sort('-year').exec((err, projects) =>{
+            if (err) return res.status(500).send({msg:"error: cant show the data"});
+            if (!projects) return res.status(404).send({msg:"error: doesnt exists projects to show"});
+            return res.status(200).send({projects});
+        });
     }
 }
 
